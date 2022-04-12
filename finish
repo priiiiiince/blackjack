@@ -1,0 +1,77 @@
+import random 
+from os import system
+
+def draw(cards):
+    return random.choice(cards)
+
+def check_score(cards):
+    ''' take a list of cards and return sum of it'''
+    if sum(cards) == 21 and len(cards) == 2:
+        return 0
+    if sum(cards) > 21 and 11 in cards:
+        cards.remove(11)
+        cards.append(1)
+    return sum(cards)
+
+def compare_score(user, dealer):
+    '''take score of user and dealer compare score and return result'''
+    if dealer == 0:
+        result = 'DEALER BLACK JACK you lose T^T'
+        global dealer_score 
+        dealer_score = 21
+    elif user == 0:
+        result = 'BLACK JACK YOU WIN!!'
+        global user_score 
+        user_score = 21
+    elif user > 21 or 22 > dealer > user :
+        result = 'You lose T^T'
+    elif dealer > 21 or dealer < user :
+        result = 'You Win!! :)'
+    elif dealer == user:
+        result = 'Draw -.-'
+    return result
+    
+cards = [11,2,3,4,5,6,7,8,9,10,10,10,10]
+def play_game() :
+    user_cards = []
+    dealer_cards = []
+    game_on = True
+    
+    for i in range(2):
+        user_cards.append(draw(cards))
+        dealer_cards.append(draw(cards))
+    
+    while game_on:
+        user_score = check_score(user_cards)
+        dealer_score = check_score(dealer_cards)
+        
+        print(f'your cards is {user_cards} and score : {user_score}')
+        print(f'dealer card [{dealer_cards[0]}, _ ]')
+    
+        if dealer_score == 0 or user_score == 0 or user_score > 21:
+            game_on = False
+        
+        else :
+            want_draw = input('want to draw more card? (y/n) : ')
+            if want_draw == 'y' :
+                user_cards.append(draw(cards))
+                user_score = check_score(user_cards)
+            else:
+                game_on = False
+    
+    while dealer_score != 0 and dealer_score < 17:
+        dealer_cards.append(draw(cards))
+        dealer_score = check_score(dealer_cards)
+          
+    game_result = compare_score(dealer = dealer_score, user = user_score)
+    print('-'*10+'\n')
+    print(game_result)
+    print(f'\nyour cards {user_cards} score : {user_score}\ndealer cards {dealer_cards} score : {dealer_score}')
+    print('-'*10)
+    
+    play_again = input('want to play again? (y/n) : ')
+    if play_again == 'y':
+        system('cls')
+        play_game()
+
+play_game()
